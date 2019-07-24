@@ -16,6 +16,11 @@
                   id=""
                   value="<%= serie.name %>"
                 />
+                <% if(errors && errors.indexOf('name') >=0) {%>
+                  <div class="alert alert-danger" role="alert">
+                    <strong>Algo deu errado!</strong> Insira o nome da série e tente novamente.
+                  </div>
+               <% } %>
               </div>
 
               <div class="form-group">
