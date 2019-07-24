@@ -3,47 +3,41 @@ const labels = [
     {id:'watching', name:'Assistindo'},
     {id:'watched', name:'Assistido'}
  ]
-const index = ({Serie}, req,res)=>{
-    Serie.find({},(err,docs)=>{
+const index = async ({Serie}, req,res)=>{
+    const docs = await Serie.find({})
         res.render('series/index',{
             series: docs,
             labels
         })
-    })
 }
-const novaProcess = ({Serie}, req,res)=>{
+const novaProcess = async({Serie}, req,res)=>{
     const serie = new Serie(req.body)
-    serie.save(()=> res.redirect('/series'))
+    await serie.save()
+    res.redirect('/series')
 }
 const novaForm = (req,res)=>{
     res.render('series/nova')
 }
 
-const excluir = ({Serie},req, res)=>{
-    Serie.remove({
+const excluir = async({Serie},req, res)=>{
+    await Serie.remove({
         _id:req.params.id
-    },(err)=>{
-        res.redirect('/series')
     })
+    res.redirect('/series')
 }
-const editarProcess = ({Serie}, req,res)=>{
-    Serie.findOne({
+const editarProcess = async ({Serie}, req,res)=>{
+   const serie = await  Serie.findOne({
         _id:req.params.id
-    },(err, serie)=>{
+    })
         serie.name = req.body.name
         serie.status = req.body.status
-        serie.save()
+        await serie.save()
         res.redirect('/series')
-    })
 }
-const editarForm = ({Serie},req,res)=>{
-
-    Serie.findOne({_id: req.params.id},(err,serie)=>{   
-        res.render('series/editar',{ serie, labels })
-    })
+const editarForm = async({Serie},req,res)=>{
+    const serie = await Serie.findOne({_id: req.params.id})
+    res.render('series/editar',{ serie, labels })
 }
-
-
 module.exports = {
     index,
     novaProcess,
